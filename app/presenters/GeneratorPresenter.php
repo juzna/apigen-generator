@@ -6,6 +6,9 @@
  * @author Jan Dolecek <juzna.cz@gmail.com>
  */
 class GeneratorPresenter extends BasePresenter {
+	/** @var int Item being processed */
+	private $itemId;
+
 	protected function startup() {
 		parent::startup();
 		$this->session->close(); // we ain't want session to block it all
@@ -44,6 +47,7 @@ class GeneratorPresenter extends BasePresenter {
 	 * @param \Nette\Database\Row $item
 	 */
 	protected function make($item) {
+		$this->itemId = $item->id;
 		$repoDir = REPOS_DIR . '/' . $item->dir; $repoDirE = escapeshellarg($repoDir);
 		$gitDir = "$repoDir/.git";
 
@@ -107,6 +111,14 @@ class GeneratorPresenter extends BasePresenter {
 
 	private function exec($cmd) {
 		echo "$cmd\n";
-		passthru($cmd);
+		exec($cmd, $output, $retval);
+
+		// Store results
+		$this->db->exec("insert into result", array(
+			'repo_id' => $this->itemId,
+			'cmd'     => $cmd,
+			'ok'      => $retval == 0,
+			'output'  => implode("\n", $output),
+		));
 	}
 }
