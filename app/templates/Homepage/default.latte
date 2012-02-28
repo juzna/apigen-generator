@@ -4,7 +4,7 @@
 	<p>Cloud based service which generates API documentation for your GitHub based project using <a href="http://apigen.org" rel="ext">ApiGen</a>.</p>
 </div>
 
-<div id="existing">
+<div id="existing-repos">
 	<h1>Generated documentations</h1>
 
 	{if $repos}
@@ -20,9 +20,9 @@
 	{/if}
 </div>
 
-<div id="add">
+<div id="add-repo">
 	<h1>Add your repo</h1>
-	<p><strong>Warning:</strong> This project is in its early development phase, please be patient.</p>
+	<p><strong class="warn">Warning:</strong> This project is in its early development phase, please be patient.</p>
 
 	{form addRepoForm}
 		<table>
@@ -49,4 +49,9 @@
 			</tr>
 		</table>
 	{/form}
+</div>
+
+<div id="comments">
+	<h1>Feedback</h1>
+	<p>Please email me in case of any questions, comments or bugs. Thanks.</p>
 </div>
