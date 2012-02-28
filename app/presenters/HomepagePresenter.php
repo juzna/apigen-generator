@@ -15,6 +15,8 @@ class HomepagePresenter extends BasePresenter {
 		$frm->addProtection();
 		$frm->addText('name', 'Name of the project')->setRequired();
 		$frm->addText('url', 'GitHub URL')->setRequired();
+		$frm->addText('subdir', 'Subdirectory with PHP code');
+
 		$frm->addSubmit('add', 'Generate API');
 
 		$frm->onSuccess[] = callback($this, 'addRepo');
@@ -23,16 +25,17 @@ class HomepagePresenter extends BasePresenter {
 	}
 
 	public function addRepo(Form $frm) {
-		if(!preg_match('~(?:https|git)://github.com/(([^/]+)/([^/]+))(?:\.git)?~Ai', $frm->values['url'], $match)) {
+		if(!preg_match('~(?:https|git)://github.com/((?U:([^/]+)/([^/]+)))(?:\.git)?$~Ai', $frm->values['url'], $match)) {
 			$frm->addError('Not a valid URL to GitHub repo');
 			return;
 		}
 
 		$this->db->exec("insert into repo", array(
-			'name' => $frm->values['name'],
-			'url'  => $frm->values['url'],
-			'dir'  => $match[1],
-			'added'=> new DateTime,
+			'name'   => $frm->values['name'],
+			'url'    => $frm->values['url'],
+			'dir'    => $match[1],
+			'subdir' => $frm->values['subdir'],
+			'added'  => new DateTime,
 		));
 
 		$this->flashMessage("Your project has been added. Downloading and generating documentation may take a minute...");
