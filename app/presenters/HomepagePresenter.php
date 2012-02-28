@@ -30,13 +30,18 @@ class HomepagePresenter extends BasePresenter {
 			return;
 		}
 
-		$this->db->exec("insert into repo", array(
+		$this->db->exec("insert into repo", $info = array(
 			'name'   => $frm->values['name'],
 			'url'    => $frm->values['url'],
 			'dir'    => $match[1],
 			'subdir' => $frm->values['subdir'],
 			'added'  => new DateTime,
 		));
+
+		// send mail
+		$msg = new \Nette\Mail\Message();
+		$msg->addTo('juzna.cz@gmail.com')->setSubject('ApiGen - new repo added')->setBody(var_export($info, true));
+		$msg->send();
 
 		$this->flashMessage("Your project has been added. Downloading and generating documentation may take a minute...");
 		if(!$this->isAjax()) $this->redirect('default');
