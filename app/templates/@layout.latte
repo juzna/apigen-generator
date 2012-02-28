@@ -28,6 +28,7 @@
 	<style type="text/css">
 		td.example { color: gray; font-size: small;}
 		li span.error { color: red; font-weight: bold; }
+		footer { color: gray; font-size: small; margin-top: 30px; }
 	</style>
 	{block head}{/block}
 </head>
@@ -38,5 +39,9 @@
 	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 
 	{include #content}
+
+	<footer>
+		<div class="copyright">&copy; 2012 <a href="http://juzna.cz">juzna.cz</a> - juzna (at) gmail.com</div>
+	</footer>
 </body>
 </html>
