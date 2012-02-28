@@ -70,7 +70,7 @@ class GeneratorPresenter extends BasePresenter {
 		$rootDir = APP_DIR . '/../';
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
-		$this->exec("php $rootDir/apigen/apigen.php -s '" . escapeshellarg($sourceDir) . "' -d '" . escapeshellarg($docDir) . "'");
+		$this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s '" . escapeshellarg($sourceDir) . "' -d '" . escapeshellarg($docDir) . "' --download");
 
 		// check
 		if(!file_exists("$docDir/index.html")) {
