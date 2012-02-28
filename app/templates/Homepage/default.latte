@@ -1,6 +1,6 @@
 {block content}
 <div id="intro">
-	<h1>Generate API</h1>
+	<h1>Generate API documentation <sup>alpha</sup></h1>
 	<p>Cloud based service which generates API documentation for your GitHub based project using <a href="http://apigen.org" rel="ext">ApiGen</a>.</p>
 </div>
 
@@ -11,7 +11,8 @@
 	<ul>
 		<li n:foreach="$repos as $repo">
 			<a n:tag-if="$repo->lastGenerated" href="doc/{$repo->dir}">{$repo->name} ({$repo->dir})</a>
-			<span class="in-progress" n:if="!$repo->lastGenerated">(being generated right now...)</span>
+			<span class="error" n:if="$repo->error">failed!</span>
+			<span class="in-progress" n:if="!$repo->error && !$repo->lastGenerated">(being generated right now...)</span>
 		</li>
 	</ul>
 	{else}
@@ -21,5 +22,31 @@
 
 <div id="add">
 	<h2>Add your repo</h2>
-	{control addRepoForm}
+	<p><strong>Warning:</strong> This project is in its early development phase, please be patient.</p>
+
+	{form addRepoForm}
+		<table>
+			<tr class="required">
+				<th>{label name /}</th>
+				<td>{input name}</td>
+				<td class="example">(Kdyby Framework)</td>
+			</tr>
+
+			<tr class="required">
+				<th>{label url /}</th>
+				<td>{input url}</td>
+				<td class="example">(https://github.com/Kdyby/Framework)</td>
+			</tr>
+
+			<tr>
+				<th>{label subdir /}</th>
+				<td>{input subdir}</td>
+				<td class="example">(libs/Kdyby)</td>
+			</tr>
+
+			<tr>
+				<td>{input add}</td>
+			</tr>
+		</table>
+	{/form}
 </div>
