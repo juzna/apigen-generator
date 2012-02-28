@@ -56,8 +56,9 @@ class GeneratorPresenter extends BasePresenter {
 
 		// Pull
 		$headBefore = $this->getHead($gitDir);
+		$branch = $item->branch ?: 'origin/master'; // branch to be checked out
 		$this->git("--git-dir='$gitDir' fetch");
-		$this->git("--git-dir='$gitDir' reset --hard origin/master");
+		$this->git("--git-dir='$gitDir' reset --hard $branch");
 		$this->db->query("update repo set lastPull=now() where id=$item->id");
 		$headAfter = $this->getHead($gitDir);
 		if(!$this->getParameter('force') && !$cloned && $headBefore == $headAfter) { // no need to generate
