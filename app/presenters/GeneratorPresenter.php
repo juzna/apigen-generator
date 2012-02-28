@@ -47,6 +47,7 @@ class GeneratorPresenter extends BasePresenter {
 	 * @param \Nette\Database\Row $item
 	 */
 	protected function make($item) {
+		$pwd = getcwd(); // current working directory
 		$this->itemId = $item->id;
 		$repoDir = REPOS_DIR . '/' . $item->dir; $repoDirE = escapeshellarg($repoDir);
 		$gitDir = "$repoDir/.git";
@@ -64,7 +65,7 @@ class GeneratorPresenter extends BasePresenter {
 		$headBefore = $this->getHead($gitDir);
 		$branch = $item->branch ?: 'origin/master'; // branch to be checked out
 		$this->git("--git-dir='$gitDir' fetch");
-		$this->git("--git-dir='$gitDir' reset --hard $branch");
+		chdir($repoDir); $this->git("--git-dir='$gitDir' reset --hard $branch"); chdir($pwd);
 		$this->db->query("update repo set lastPull=now() where id=$item->id");
 		$headAfter = $this->getHead($gitDir);
 		if(!$this->getParameter('force') && !$cloned && $headBefore == $headAfter) { // no need to generate
