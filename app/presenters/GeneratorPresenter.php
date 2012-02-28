@@ -42,14 +42,14 @@ class GeneratorPresenter extends BasePresenter {
 	 * @param \Nette\Database\Row $item
 	 */
 	protected function make($item) {
-		$repoDir = REPOS_DIR . '/' . $item->dir;
-		$gitDir = "$repoDir/.git";
+		$repoDir = REPOS_DIR . '/' . $item->dir; $repoDirE = escapeshellarg($repoDir);
+		$gitDir = "$repoDirE/.git";
 
 		// Clone repo
 		if(!file_exists($gitDir)) {
 			$cloned = true;
 			echo "Cloning '$item->url' to '$repoDir'\n";
-			$this->git("clone '$item->url' '$repoDir'");
+			$this->git("clone '$item->url' '$repoDirE'");
 			$this->git("--git-dir='$gitDir' submodule init");
 			$this->git("--git-dir='$gitDir' submodule update");
 		} else $cloned = false;
@@ -70,7 +70,7 @@ class GeneratorPresenter extends BasePresenter {
 		$rootDir = APP_DIR . '/../';
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
-		$this->exec("php $rootDir/apigen/apigen.php -s $sourceDir -d $docDir");
+		$this->exec("php $rootDir/apigen/apigen.php -s '" . escapeshellarg($sourceDir) . "' -d '" . escapeshellarg($docDir) . "'");
 
 		// check
 		if(!file_exists("$docDir/index.html")) {
