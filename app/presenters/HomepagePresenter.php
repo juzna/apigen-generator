@@ -34,6 +34,12 @@ class HomepagePresenter extends BasePresenter {
 			return;
 		}
 
+		// Check for duplicate repo
+		if($this->db->fetchColumn("select count(*) from repo where url = ? or dir = ?", $frm->values['url'], $match[1])) {
+			$frm->addError("This repository already exists. Email me if you need to make any changes in it.");
+			return;
+		}
+
 		$this->db->exec("insert into repo", $info = array(
 			'name'   => $frm->values['name'],
 			'url'    => $frm->values['url'],
