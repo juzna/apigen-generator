@@ -70,6 +70,7 @@ class GeneratorPresenter extends BasePresenter {
 		$rootDir = APP_DIR . '/../';
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
+		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
 		$this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --download");
 
 		// check
@@ -80,8 +81,9 @@ class GeneratorPresenter extends BasePresenter {
 		}
 
 		// Move to final dir
-		@mkdir(DOC_FINAL_DIR . '/' . dirname($item->dir));
-		rename(DOC_PROCESSING_DIR . "/$item->dir", DOC_FINAL_DIR . "/$item->dir");
+		@mkdir(dirname($docFinalDir));
+		$this->exec("rm -rf " . escapeshellarg($docFinalDir)); // remove contemporary doc
+		rename($docDir, $docFinalDir);
 
 		// Mark as generated
 		$this->db->query("update repo set lastGenerated=now(), error=0 where id=$item->id");
