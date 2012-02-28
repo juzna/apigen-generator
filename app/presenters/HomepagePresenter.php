@@ -29,6 +29,10 @@ class HomepagePresenter extends BasePresenter {
 			$frm->addError('Not a valid URL to GitHub repo');
 			return;
 		}
+		if(preg_match('~(^|/)..(/|$)~', $frm->values['subdir'])) {
+			$frm->addError("Invalid subdirectory given");
+			return;
+		}
 
 		$this->db->exec("insert into repo", $info = array(
 			'name'   => $frm->values['name'],
