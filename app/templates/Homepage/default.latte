@@ -1,0 +1,25 @@
+{block content}
+<div id="intro">
+	<h1>Generate API</h1>
+	<p>Cloud based service which generates API documentation for your GitHub based project using <a href="http://apigen.org" rel="ext">ApiGen</a>.</p>
+</div>
+
+<div id="existing">
+	<h1>Generated documentations</h1>
+
+	{if $repos}
+	<ul>
+		<li n:foreach="$repos as $repo">
+			<a n:tag-if="$repo->lastGenerated" href="doc/{$repo->dir}">{$repo->name} ({$repo->dir})</a>
+			<span class="in-progress" n:if="!$repo->lastGenerated">(being generated right now...)</span>
+		</li>
+	</ul>
+	{else}
+	<p>No documentation generated yet. Be the first to add one...</p>
+	{/if}
+</div>
+
+<div id="add">
+	<h2>Add your repo</h2>
+	{control addRepoForm}
+</div>
