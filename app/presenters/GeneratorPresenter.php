@@ -84,7 +84,7 @@ class GeneratorPresenter extends BasePresenter {
 		rename(DOC_PROCESSING_DIR . "/$item->dir", DOC_FINAL_DIR . "/$item->dir");
 
 		// Mark as generated
-		$this->db->query("update repo set lastGenerated=now() where id=$item->id");
+		$this->db->query("update repo set lastGenerated=now(), error=0 where id=$item->id");
 	}
 
 
