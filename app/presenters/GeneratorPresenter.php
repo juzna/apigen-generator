@@ -32,6 +32,17 @@ class GeneratorPresenter extends BasePresenter {
 		$this->sendResponse(new \Nette\Application\Responses\TextResponse("All done!"));
 	}
 
+	// regenerate all
+	public function actionRegenerateAll() {
+		foreach($this->db->query("select * from repo") as $repo) {
+			echo "Processing repo $repo->url ($repo->id)\n";
+			$this->make($repo);
+			echo '<hr>';
+		}
+
+		$this->sendResponse(new \Nette\Application\Responses\TextResponse("All done!"));
+	}
+
 	// generate api for one repo (by id or directory name)
 	public function actionGenerate($dir) {
 		$repo = $this->db->query("select * from repo where id = ? or dir = ?", $dir, $dir)->fetch();
