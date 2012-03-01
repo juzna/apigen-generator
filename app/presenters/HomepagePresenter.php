@@ -6,6 +6,11 @@ use \Nette\Application\UI\Form;
  * Homepage presenter.
  */
 class HomepagePresenter extends BasePresenter {
+	protected function startup() {
+		parent::startup();
+		$this->session->start();
+	}
+
 	public function renderDefault()	{
 		$this->template->repos = $this->db->table('repo');
 	}
