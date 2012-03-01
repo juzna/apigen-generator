@@ -89,10 +89,10 @@ class GeneratorPresenter extends BasePresenter {
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
 		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
-		$this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name));
+		$generatedWell = $this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name));
 
 		// check
-		if(!file_exists("$docDir/index.html")) {
+		if(!file_exists("$docDir/index.html") || !$generatedWell) {
 			echo "Failed to generate\n";
 			$this->db->query("update repo set error=1 where id=$item->id");
 			return;
@@ -121,6 +121,11 @@ class GeneratorPresenter extends BasePresenter {
 		$this->exec("/usr/bin/git $cmd");
 	}
 
+	/**
+	 * Execute external command
+	 * @param string $cmd
+	 * @return bool  Finished sucessfully?
+	 */
 	private function exec($cmd) {
 		echo "$cmd\n";
 		exec($cmd, $output, $retval);
@@ -132,5 +137,7 @@ class GeneratorPresenter extends BasePresenter {
 			'ok'      => $retval == 0,
 			'output'  => implode("\n", $output),
 		));
+
+		return $retval == 0;
 	}
 }
