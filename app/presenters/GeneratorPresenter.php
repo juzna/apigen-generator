@@ -89,7 +89,7 @@ class GeneratorPresenter extends BasePresenter {
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
 		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
-		$generatedWell = $this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name));
+		$generatedWell = $this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name));
 
 		// check
 		if(!file_exists("$docDir/index.html") || !$generatedWell) {
