@@ -1,3 +1,5 @@
+/app/config/environment.php
+/app/config/config.local.neon
 /doc-*
 /repos
 Guardfile

@@ -17,6 +17,10 @@ define('DOC_FINAL_DIR',      realpath(APP_DIR . '/../doc-final'));
 // Configure application
 $configurator = new Nette\Config\Configurator;
 
+if(file_exists(__DIR__ . '/config/environment.php')) {
+	require_once __DIR__ . '/config/environment.php';
+}
+
 // Enable Nette Debugger for error visualisation & logging
 //$configurator->setProductionMode($configurator::AUTO);
 $configurator->enableDebugger(__DIR__ . '/../log');
@@ -29,7 +33,9 @@ $configurator->createRobotLoader()
 	->register();
 
 // Create Dependency Injection container from config.neon file
-$configurator->addConfig(__DIR__ . '/config/config.neon');
+$configurator
+	->addConfig(__DIR__ . '/config/config.neon', defined('ENVIRONMENT_NAME') ? ENVIRONMENT_NAME : null)
+	->addConfig(__DIR__ . '/config/config.local.neon', defined('ENVIRONMENT_NAME') ? ENVIRONMENT_NAME : null);
 $container = $configurator->createContainer();
 
 // Setup router

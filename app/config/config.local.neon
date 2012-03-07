@@ -1,0 +1,11 @@
+common:
+	parameters:
+		database:
+
+production < common:
+	parameters:
+		database:
+
+development < common:
+	parameters:
+		database:
