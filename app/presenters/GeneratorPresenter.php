@@ -3,6 +3,8 @@
 /**
  * Downloads and generates API doc
  *
+ * Requires logged-in user
+ *
  * @author Jan Dolecek <juzna.cz@gmail.com>
  */
 class GeneratorPresenter extends BasePresenter {
@@ -11,6 +13,13 @@ class GeneratorPresenter extends BasePresenter {
 
 	protected function startup() {
 		parent::startup();
+
+		// User must be authenticated
+		if (!$this->getUser()->loggedIn) {
+			$this->redirect('Sign:in');
+		}
+
+
 		$this->session->close(); // we ain't want session to block it all
 
 		// do not buffer!
