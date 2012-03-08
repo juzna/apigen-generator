@@ -15,10 +15,10 @@
 	<table n:if="$repos" class="table table-striped table-bordered">
 		<thead><tr>
 			{* <th>#</th> *}
-			<th>Name</th>
+			<th>Project name</th>
 			<th>GitHub</th>
-			<th>Pull</th>
-			<th>Generated</th>
+			<th title="Last time repo was downloaded from GitHub">Last Pull</th>
+			<th title="Last time API documentation was generated">Generated</th>
 			<th>Status</th>
 			<th>Statistics</th>
 		</tr></thead>
@@ -27,8 +27,8 @@
 			{* <td n:class="notImportant">{$repo->id}</td> *}
 			<td><a n:tag-if="$repo->lastGenerated" href="{$basePath}/doc/{$repo->dir}">{$repo->name}</a></td>
 			<td>
-				<small><a n:tag-if="strpos($repo->url, 'github.com') !== false" href="https://github.com/{$repo->dir}{= $repo->branch ? "/tree/$repo->branch" : ''}">{$repo->dir}</a>
-				<span n:if="$repo->branch" class="label label-info" title="Branch">{$repo->branch}</span>
+				<small><a n:tag-if="strpos($repo->url, 'github.com') !== false" href="https://github.com/{$repo->dir}">{$repo->dir}</a>
+				<a n:if="$repo->branch" class="label label-info" title="Branch" href="https://github.com/{$repo->dir}/tree/{$repo->branch}">{$repo->branch}</a>
 			</td>
 			<td>{!$repo->lastPull|timeAgoInWordsEx}</td>
 			<td>{!$repo->lastGenerated|timeAgoInWordsEx}</td>
