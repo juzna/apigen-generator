@@ -1,0 +1,32 @@
+{block css}
+ td.notImportant { color: gray; font-size: small; }
+ td.default { color: gray; }
+ td.status { color: green; }
+ td.status.error { color: red; }
+{/block}
+
+{block content}
+<h1>ApiGen Generator - Repos</h1>
+
+<table>
+	<thead><tr>
+		<th>#</th>
+		<th>Name</th>
+		<th>GitHub</th>
+		<th>Branch</th>
+		<th>Last pull</th>
+		<th>Last generated</th>
+		<th>Result</th>
+	</tr></thead>
+	<tbody>
+		<tr n:foreach="$repos as $repo">
+			<td n:class="notImportant">{$repo->id}</td>
+			<td>{$repo->name}</td>
+			<td><a href="https://github.com/{$repo->dir}{= $repo->branch ? "/tree/$repo->branch" : ''}">{$repo->dir}</a></td>
+			<td n:class="branch, $repo->branch ?: default">{= $repo->branch ?: 'master'}</td>
+			<td>{$repo->lastPull|timeAgoInWords}</td>
+			<td>{$repo->lastGenerated|timeAgoInWords}</td>
+			<td n:class="status, $repo->error ? error"><a n:tag-if="$repo->apigenResultId" n:href="Homepage:result $repo->id">{= !$repo->error ? 'OK' : 'failed'}</a></td>
+		</tr>
+	</tbody>
+</table>

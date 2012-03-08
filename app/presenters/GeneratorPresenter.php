@@ -18,20 +18,16 @@ class GeneratorPresenter extends BasePresenter {
 		if (!$this->getUser()->loggedIn) {
 			$this->redirect('Sign:in');
 		}
-
-
-		$this->session->close(); // we ain't want session to block it all
-
-		// do not buffer!
-		while(ob_get_level() > 0) ob_end_flush();
-		ob_implicit_flush(true);
-
-		echo '<pre>';
 	}
 
+	// print out all repos
+	public function renderDefault()	{
+		$this->template->repos = $this->db->table('repo')->order('name');
+	}
 
 	// generate API for all repos
 	public function actionGenerateAll() {
+		$this->beginRawOutput();
 		foreach($this->db->query("select * from repo where lastPull is null or lastPull < date_sub(now(), interval 1 hour)") as $repo) {
 			echo "Processing repo $repo->url ($repo->id)\n";
 			$this->make($repo);
@@ -43,6 +39,7 @@ class GeneratorPresenter extends BasePresenter {
 
 	// regenerate all
 	public function actionRegenerateAll() {
+		$this->beginRawOutput();
 		foreach($this->db->query("select * from repo") as $repo) {
 			echo "Processing repo $repo->url ($repo->id)\n";
 			$this->make($repo);
@@ -54,11 +51,26 @@ class GeneratorPresenter extends BasePresenter {
 
 	// generate api for one repo (by id or directory name)
 	public function actionGenerate($dir) {
+		$this->beginRawOutput();
 		$repo = $this->db->query("select * from repo where id = ? or dir = ?", $dir, $dir)->fetch();
 		if(!$repo) throw new \Nette\Application\BadRequestException("Requested repo doesnt exist");
 
 		$this->make($repo);
 		$this->sendResponse(new \Nette\Application\Responses\TextResponse("Done!"));
+	}
+
+
+	/**
+	 * For actions which take long time: disable output buffer and close session.
+	 */
+	protected function beginRawOutput() {
+		$this->session->close(); // we ain't want session to block it all
+
+		// do not buffer!
+		while(ob_get_level() > 0) ob_end_flush();
+		ob_implicit_flush(true);
+
+		echo '<pre>';
 	}
 
 
@@ -98,7 +110,8 @@ class GeneratorPresenter extends BasePresenter {
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
 		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
-		$generatedWell = $this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name));
+		$generatedWell = $this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name), $result);
+		if($result) $this->db->table('repo')->where('id', $item->id)->update(array('apigenResultId' => $result->id));
 
 		// check
 		if(!file_exists("$docDir/index.html") || !$generatedWell) {
@@ -133,14 +146,15 @@ class GeneratorPresenter extends BasePresenter {
 	/**
 	 * Execute external command
 	 * @param string $cmd
+	 * @param ActiveRow $result Database row store into result table
 	 * @return bool  Finished sucessfully?
 	 */
-	private function exec($cmd) {
+	private function exec($cmd, &$result = null) {
 		echo "$cmd\n";
 		exec($cmd, $output, $retval);
 
 		// Store results
-		$this->db->exec("insert into result", array(
+		$result = $this->db->table('result')->insert(array(
 			'repo_id' => $this->itemId,
 			'cmd'     => $cmd,
 			'ok'      => $retval == 0,
