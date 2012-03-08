@@ -12,7 +12,7 @@ class GeneratorPresenter extends BasePresenter {
 		parent::startup();
 
 		// User must be authenticated
-		if (!$this->getUser()->loggedIn) {
+		if (PHP_SAPI !== 'cli' && !$this->getUser()->loggedIn) {
 			$this->redirect('Sign:in');
 		}
 	}
