@@ -106,12 +106,17 @@ class GeneratorPresenter extends BasePresenter {
 		}
 
 		// Generate API
+		$timeStarted = microtime(true);
 		$rootDir = APP_DIR . '/../';
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
 		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
 		$generatedWell = $this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name), $result);
-		if($result) $this->db->table('repo')->where('id', $item->id)->update(array('apigenResultId' => $result->id));
+		$this->db->table('repo')->where('id', $item->id)->update(array(
+			'apigenResultId' => $result->id,
+			'apigenTime'     => microtime(true) - $timeStarted,
+			'sizeDoc'        => (int) exec("du -sb " . escapeshellarg($docDir)),
+		));
 
 		// check
 		if(!file_exists("$docDir/index.html") || !$generatedWell) {
