@@ -28,7 +28,7 @@ class Helpers
 
 	public static function interval($seconds, $short = false) {
 		$periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
-		if($short) $periods = array("s", "mi", "h", "d", "w", "month", "year", "decade");
+		if($short) $periods = array("s", "min", "h", "d", "w", "month", "year", "decade");
 		$lengths = array("60","60","24","7","4.35","12","10");
 		for($j = 0; $seconds >= $lengths[$j]; $j++)
 			$seconds /= $lengths[$j];
