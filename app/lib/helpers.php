@@ -49,6 +49,13 @@ class Helpers
 		$text = "$difference $periods[$j] ago";
 		return $text;
 	}
+
+	public static function agoEx($time) {
+		$date = \Nette\Templating\Helpers::date($time, "%x %X");
+		$ago = static::ago($time);
+		return "<span title=\"$date\">$ago</span>";
+	}
+
 	/**
 	 * Czech helper time ago in words.
 	 * @param  int
