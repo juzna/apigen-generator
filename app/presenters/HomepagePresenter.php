@@ -24,6 +24,18 @@ class HomepagePresenter extends BasePresenter {
 		$this->template->result = $this->db->table('result')->get($repo->apigenResultId);
 	}
 
+	// status of doc generating in progress
+	public function renderProgress($repoId) {
+		if(!$repo = $this->db->table('repo')->get((int) $repoId)) throw new \Nette\Application\BadRequestException("Repo not found");
+		$this->template->repo = $repo;
+
+		if(file_exists($progressPath = "/tmp/apigen-generating-$repo->id.log")) {
+			$data = file_get_contents($progressPath);
+			$data = preg_replace('~^.*\x08~m', '', $data);
+			$this->template->progress = $data;
+		}
+	}
+
 
 	protected function createComponentAddRepoForm() {
 		$frm = new Form;
@@ -75,7 +87,7 @@ class HomepagePresenter extends BasePresenter {
 			exec($cmd);
 		}
 
-		$this->flashMessage("Your project has been added. Downloading and generating documentation may take a minute...");
-		if(!$this->isAjax()) $this->redirect('default');
+		// $this->flashMessage("Your project has been added. Downloading and generating documentation may take a minute...");
+		if(!$this->isAjax()) $this->redirect('progress', array($repo->id));
 	}
 }

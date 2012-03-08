@@ -25,6 +25,7 @@ class Generator extends \Nette\Object {
 	public function make($item, $force) {
 		$pwd = getcwd(); // current working directory
 		$this->itemId = $item->id;
+		$this->db->query("update repo set inProgress=1 where id=$item->id");
 		$repoDir = REPOS_DIR . '/' . $item->dir; $repoDirE = escapeshellarg($repoDir);
 		$gitDir = "$repoDir/.git";
 
@@ -46,11 +47,11 @@ class Generator extends \Nette\Object {
 		$headAfter = $this->getHead($gitDir);
 		if(!$force && !$cloned && $headBefore == $headAfter) { // no need to generate
 			echo "  This repo is upto date ($headBefore, $headAfter)\n";
+			$this->db->query("update repo set inProgress=0 where id=$item->id");
 			return;
 		}
 
 		// Generate API
-		$this->db->query("update repo set inProgress=1 where id=$item->id");
 		$timeStarted = microtime(true);
 		$rootDir = APP_DIR . '/../';
 		$sourceDir = "$repoDir/$item->subdir";

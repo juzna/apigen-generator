@@ -1,0 +1,18 @@
+{block content}
+<h1>Your API documentation is being generated...</h1>
+<p>Please wait</p>
+
+{* display progress *}
+{ifset $progress}
+<pre n:block="progress">{$progress}</pre>
+{/ifset}
+
+
+<h2 n:if="!$repo->inProgress" style="color: red;">Finished</h2>
+<script type="text/javascript">
+	var finished = {= !$repo->inProgress};
+	setTimeout(function() {
+		if(finished) location.href = {link Homepage:default};
+		else location.reload();
+	}, finished ? 15000 : 5000)
+</script>
