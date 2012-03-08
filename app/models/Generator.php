@@ -50,13 +50,17 @@ class Generator extends \Nette\Object {
 		}
 
 		// Generate API
+		$this->db->query("update repo set inProgress=1 where id=$item->id");
 		$timeStarted = microtime(true);
 		$rootDir = APP_DIR . '/../';
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
 		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
-		$generatedWell = $this->exec("php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=no --title=" . escapeshellarg($item->name), $result);
+		$cmd = "php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=yes --title=" . escapeshellarg($item->name);
+		$cmd = "$cmd > /tmp/apigen-generating-$item->id.log 2>&1; cat /tmp/apigen-generating-$item->id.log";
+		$generatedWell = $this->exec($cmd, $result);
 		$this->db->table('repo')->where('id', $item->id)->update(array(
+			'inProgress'     => 0,
 			'apigenResultId' => $result->id,
 			'apigenTime'     => microtime(true) - $timeStarted,
 			'sizeDoc'        => (int) exec("du -sb " . escapeshellarg($docDir)),

@@ -18,6 +18,9 @@ CREATE TABLE `repo` (
   `error` tinyint(4) default NULL,
   `branch` varchar(255) default NULL,
   `apigenResultId` int(11) default NULL,
+  `apigenTime` decimal(5,2) default NULL,
+  `sizeDoc` int(11) default NULL,
+  `inProgress` tinyint(1) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `dir` (`dir`),
   UNIQUE KEY `url` (`url`)
