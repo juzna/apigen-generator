@@ -39,9 +39,9 @@ $configurator
 $container = $configurator->createContainer();
 
 // Setup router
+$container->router[] = new \Nette\Application\Routers\CliRouter;
 $container->router[] = new Route('index.php', 'Homepage:default', Route::ONE_WAY);
 $container->router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
-$container->router[] = new \Nette\Application\Routers\CliRouter();
 
 
 // Configure and run the application!
