@@ -74,6 +74,7 @@ class HomepagePresenter extends BasePresenter {
 			'dir'    => $match[1],
 			'subdir' => $frm->values['subdir'],
 			'added'  => new DateTime,
+			'inProgress' => 1, // mark as in progress immediately, to avoid race between our background script and browser
 		));
 
 		// send mail
