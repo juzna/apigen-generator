@@ -17,7 +17,6 @@
 			{* <th>#</th> *}
 			<th>Name</th>
 			<th>GitHub</th>
-			<th>Branch</th>
 			<th>Pull</th>
 			<th>Generated</th>
 			<th>Status</th>
@@ -27,8 +26,10 @@
 		<tr n:foreach="$repos as $repo">
 			{* <td n:class="notImportant">{$repo->id}</td> *}
 			<td><a n:tag-if="$repo->lastGenerated" href="{$basePath}/doc/{$repo->dir}">{$repo->name}</a></td>
-			<td><small><a n:tag-if="strpos($repo->url, 'github.com') !== false" href="https://github.com/{$repo->dir}{= $repo->branch ? "/tree/$repo->branch" : ''}">{$repo->dir}</a></td>
-			<td n:class="branch, $repo->branch ?: default"><span class="label label-info">{= $repo->branch ?: 'master'}</span></td>
+			<td>
+				<small><a n:tag-if="strpos($repo->url, 'github.com') !== false" href="https://github.com/{$repo->dir}{= $repo->branch ? "/tree/$repo->branch" : ''}">{$repo->dir}</a>
+				<span n:if="$repo->branch" class="label label-info" title="Branch">{$repo->branch}</span>
+			</td>
 			<td>{!$repo->lastPull|timeAgoInWordsEx}</td>
 			<td>{!$repo->lastGenerated|timeAgoInWordsEx}</td>
 			<td n:class="status, $repo->error ? error">
