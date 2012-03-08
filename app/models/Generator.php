@@ -112,7 +112,7 @@ class Generator extends \Nette\Object {
 			'repo_id' => $this->itemId,
 			'cmd'     => $cmd,
 			'ok'      => $retval == 0,
-			'output'  => implode("\n", $output),
+			'output'  => $data = str_replace(realpath(APP_DIR . '/..'), '...', implode("\n", $output)), // remove local paths from output,
 		));
 
 		return $retval == 0;

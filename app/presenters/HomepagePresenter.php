@@ -32,6 +32,7 @@ class HomepagePresenter extends BasePresenter {
 		if(file_exists($progressPath = "/tmp/apigen-generating-$repo->id.log")) {
 			$data = file_get_contents($progressPath);
 			$data = preg_replace('~^.*\x08~m', '', $data);
+			$data = str_replace(realpath(APP_DIR . '/..'), '...', $data); // remove local paths from output
 			$this->template->progress = $data;
 		}
 	}
