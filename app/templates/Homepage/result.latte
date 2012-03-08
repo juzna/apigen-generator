@@ -1,0 +1,10 @@
+{block #content}
+<h1>Status of {$repo->name} ({$repo->dir})</h1>
+
+{if $result}
+	<strong>Command</strong>: <span>{$result->cmd}</span><br>
+	<pre>{$result->output}</pre>
+{else}
+	<p class="error">No result found for this repository</p>
+{/if}
+

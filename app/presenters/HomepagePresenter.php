@@ -11,9 +11,19 @@ class HomepagePresenter extends BasePresenter {
 		$this->session->start();
 	}
 
+	// list of repos
 	public function renderDefault()	{
 		$this->template->repos = $this->db->table('repo');
 	}
+
+	// result of doc generating
+	public function renderResult($repoId) {
+		if(!$repo = $this->db->table('repo')->get((int) $repoId)) throw new \Nette\Application\BadRequestException("Repo not found");
+
+		$this->template->repo = $repo;
+		$this->template->result = $this->db->table('result')->get($repo->apigenResultId);
+	}
+
 
 	protected function createComponentAddRepoForm() {
 		$frm = new Form;
