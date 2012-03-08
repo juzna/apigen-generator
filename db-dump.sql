@@ -17,6 +17,7 @@ CREATE TABLE `repo` (
   `lastGenerated` datetime default NULL,
   `error` tinyint(4) default NULL,
   `branch` varchar(255) default NULL,
+  `apigenResultId` int(11) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `dir` (`dir`),
   UNIQUE KEY `url` (`url`)
@@ -34,4 +35,14 @@ CREATE TABLE `result` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
--- 2012-02-29 00:17:52
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL auto_increment,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `role` varchar(50) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
+(1,	'juzna',	'ed97b376f2a0804df9d3d99de3bacb0b',	'admin');
