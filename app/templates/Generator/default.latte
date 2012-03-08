@@ -17,6 +17,7 @@
 		<th>Last pull</th>
 		<th>Last generated</th>
 		<th>Result</th>
+		<th>Actions</th>
 	</tr></thead>
 	<tbody>
 		<tr n:foreach="$repos as $repo">
@@ -24,9 +25,12 @@
 			<td>{$repo->name}</td>
 			<td><a href="https://github.com/{$repo->dir}{= $repo->branch ? "/tree/$repo->branch" : ''}">{$repo->dir}</a></td>
 			<td n:class="branch, $repo->branch ?: default">{= $repo->branch ?: 'master'}</td>
-			<td>{$repo->lastPull|timeAgoInWords}</td>
-			<td>{$repo->lastGenerated|timeAgoInWords}</td>
+			<td>{!$repo->lastPull|timeAgoInWordsEx}</td>
+			<td>{!$repo->lastGenerated|timeAgoInWordsEx}</td>
 			<td n:class="status, $repo->error ? error"><a n:tag-if="$repo->apigenResultId" n:href="Homepage:result $repo->id">{= !$repo->error ? 'OK' : 'failed'}</a></td>
+			<td>
+				<a n:href="generate $repo->dir, force => 1">re-generate</a>
+			</td>
 		</tr>
 	</tbody>
 </table>
