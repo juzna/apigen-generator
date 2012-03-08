@@ -1,3 +1,10 @@
+{block css}
+td.notImportant { color: gray; font-size: small; }
+td.default { color: gray; }
+td.status { color: green; }
+td.status.error { color: red; }
+{/block}
+
 {block content}
 <div id="intro">
 	<h1>Generate API documentation <sup>alpha</sup></h1>
@@ -7,16 +14,37 @@
 <div id="existing-repos">
 	<h1>Generated documentations</h1>
 
-	{if $repos}
-	<ul>
-		<li n:foreach="$repos as $repo">
-			<a n:tag-if="$repo->lastGenerated" href="doc/{$repo->dir}">{$repo->name} ({$repo->dir})</a>
-			<span class="error" n:if="$repo->error">failed!</span>
-			<span class="in-progress" n:if="!$repo->error && !$repo->lastGenerated">(being generated right now...)</span>
-		</li>
-	</ul>
-	{else}
-	<p>No documentation generated yet. Be the first to add one...</p>
+	<table n:if="$repos">
+		<thead><tr>
+			<th>#</th>
+			<th>Name</th>
+			<th>GitHub</th>
+			<th>Branch</th>
+			<th>Last pull</th>
+			<th>Last generated</th>
+			<th>Status</th>
+		</tr></thead>
+		<tbody>
+		<tr n:foreach="$repos as $repo">
+			<td n:class="notImportant">{$repo->id}</td>
+			<td><a n:tag-if="$repo->lastGenerated" href="{$basePath}/doc/{$repo->dir}">{$repo->name}</a></td>
+			<td><a href="https://github.com/{$repo->dir}{= $repo->branch ? "/tree/$repo->branch" : ''}">{$repo->dir}</a></td>
+			<td n:class="branch, $repo->branch ?: default">{= $repo->branch ?: 'master'}</td>
+			<td>{!$repo->lastPull|timeAgoInWordsEx}</td>
+			<td>{!$repo->lastGenerated|timeAgoInWordsEx}</td>
+			<td n:class="status, $repo->error ? error">
+				{if !$repo->error && !$repo->lastGenerated}
+					being generated right now...
+				{else}
+					<a n:tag-if="$repo->apigenResultId" n:href="Homepage:result $repo->id">{= !$repo->error ? 'OK' : 'failed'}</a>
+				{/if}
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	{if !$repos}
+		<p>No documentation generated yet. Be the first to add one...</p>
 	{/if}
 </div>
 
