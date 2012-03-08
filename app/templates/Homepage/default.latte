@@ -23,6 +23,7 @@ td.status.error { color: red; }
 			<th>Last pull</th>
 			<th>Last generated</th>
 			<th>Status</th>
+			<th>Statistics</th>
 		</tr></thead>
 		<tbody>
 		<tr n:foreach="$repos as $repo">
@@ -38,6 +39,10 @@ td.status.error { color: red; }
 				{else}
 					<a n:tag-if="$repo->apigenResultId" n:href="Homepage:result $repo->id">{= !$repo->error ? 'OK' : 'failed'}</a>
 				{/if}
+			</td>
+			<td class="notImportant">
+				<span n:if="$repo->apigenTime" title="Time to generate doc">{$repo->apigenTime|interval}</span>{if $repo->apigenTime && $repo->sizeDoc},{/if}
+				<span n:if="$repo->sizeDoc" title="Size of generated doc">{$repo->sizeDoc|bytes}</span>
 			</td>
 		</tr>
 		</tbody>

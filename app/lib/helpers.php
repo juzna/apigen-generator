@@ -25,6 +25,19 @@
  */
 class Helpers
 {
+
+	public static function interval($seconds) {
+		$periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
+		$lengths = array("60","60","24","7","4.35","12","10");
+		for($j = 0; $seconds >= $lengths[$j]; $j++)
+			$seconds /= $lengths[$j];
+
+		$seconds = round($seconds, 2);
+		if($seconds != 1) $periods[$j].= "s";
+
+		return "$seconds $periods[$j]";
+	}
+
 	public static function ago($time) {
 		if (!$time) {
 			return FALSE;

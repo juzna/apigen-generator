@@ -18,6 +18,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
 		$template = parent::createTemplate($class);
 		$template->registerHelper('timeAgoInWords', 'Helpers::ago');
 		$template->registerHelper('timeAgoInWordsEx', 'Helpers::agoEx');
+		$template->registerHelper('interval', 'Helpers::interval');
 		return $template;
 	}
 }
