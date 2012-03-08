@@ -55,7 +55,7 @@ class HomepagePresenter extends BasePresenter {
 			return;
 		}
 
-		$this->db->exec("insert into repo", $info = array(
+		$repo = $this->db->table('repo')->insert(array(
 			'name'   => $frm->values['name'],
 			'url'    => $frm->values['url'],
 			'dir'    => $match[1],
@@ -65,7 +65,7 @@ class HomepagePresenter extends BasePresenter {
 
 		// send mail
 		$msg = new \Nette\Mail\Message();
-		$msg->addTo('juzna.cz@gmail.com')->setSubject('ApiGen - new repo added')->setBody(var_export($info, true));
+		$msg->addTo('juzna.cz@gmail.com')->setSubject('ApiGen - new repo added')->setBody(var_export($repo->toArray(), true));
 		$msg->send();
 
 		$this->flashMessage("Your project has been added. Downloading and generating documentation may take a minute...");
