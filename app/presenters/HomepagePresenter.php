@@ -68,6 +68,13 @@ class HomepagePresenter extends BasePresenter {
 		$msg->addTo('juzna.cz@gmail.com')->setSubject('ApiGen - new repo added')->setBody(var_export($repo->toArray(), true));
 		$msg->send();
 
+		// immediately execute generating script
+		{
+			$cmd = 'php ' . WWW_DIR . '/index.php generator:generate --dir=' . $repo->id;
+			$cmd = "nohup $cmd > /tmp/apigen-repo-$repo->id.log 2>&1 &";
+			exec($cmd);
+		}
+
 		$this->flashMessage("Your project has been added. Downloading and generating documentation may take a minute...");
 		if(!$this->isAjax()) $this->redirect('default');
 	}
