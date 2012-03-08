@@ -1,11 +1,10 @@
-{block css}
-	td.notImportant { color: gray; font-size: small; }
-	td.default { color: gray; }
-	td.status { color: green; }
-	td.status.error { color: red; }
-	section { padding-top: 30px; }
-	dl { margin-top: 0px; }
-{/block}
+<ul class="nav" n:block="navbar">
+	<li class="active"><a href="#intro">Home</a></li>
+	<li><a href="#existing">Existing repos</a></li>
+	<li><a href="#add">Add repo</a></li>
+	<li><a href="#feedback">Feedback</a></li>
+</ul>
+
 
 {block content}
 <section id="existing">

@@ -35,6 +35,13 @@
 		footer { color: gray; font-size: small; margin-top: 30px; }
 		.warn { color: red; }
 		.footer { border-top: 1px solid #E5E5E5; }
+		td.notImportant { color: gray; font-size: small; }
+		td.default { color: gray; }
+		td.status { color: green; }
+		td.status.error { color: red; }
+		section { padding-top: 30px; }
+		dl { margin-top: 0px; }
+
 		{block css}{/block}
 	</style>
 	{block head}{/block}
@@ -55,13 +62,13 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<a class="brand" href="#">ApiGen Generator</a>
+				<a class="brand" n:href="Homepage:default">ApiGen Generator</a>
 				<div class="nav-collapse">
-					<ul class="nav">
-						<li class="active"><a href="#intro">Home</a></li>
-						<li><a href="#existing">Existing repos</a></li>
-						<li><a href="#add">Add repo</a></li>
-						<li><a href="#feedback">Feedback</a></li>
+					<ul class="nav" n:block="navbar">
+						<li class="active"><a n:href="Homepage:default#intro">Home</a></li>
+						<li><a n:href="Homepage:default#existing">Existing repos</a></li>
+						<li><a n:href="Homepage:default#add">Add repo</a></li>
+						<li><a n:href="Homepage:default#feedback">Feedback</a></li>
 					</ul>
 				</div>
 			</div>
@@ -71,7 +78,8 @@
 	<div class="container">
 		<div id="intro" class="hero-unit">
 			<h1>Generate API documentation <sup>alpha</sup></h1>
-			<p>Cloud based service which generates API documentation for your GitHub based project using <a href="http://apigen.org" rel="ext">ApiGen</a>.</p>
+			<p>Cloud based service which generates API documentation for your GitHub based project using the great
+				documentation generator <a href="http://apigen.org" rel="ext">ApiGen</a>.</p>
 		</div>
 
 		<div n:foreach="$flashes as $flash" class="alert {$flash->type}">{$flash->message}</div>
@@ -79,8 +87,8 @@
 		{include #content}
 
 		<footer class="footer">
-			<a href="https://github.com/juzna/apigen-generator">GitHub</a> |
-			&copy; 2012 <a href="http://juzna.cz">juzna.cz</a> - juzna (at) gmail.com
+			Created by <a href="http://juzna.cz">juzna.cz</a> | juzna (at) gmail.com | <a href="https://twitter.com/juznacz">@juznacz</a> |
+			<a href="https://github.com/juzna/apigen-generator">GitHub</a>
 		</footer>
 	</div>
 </body>
