@@ -18,31 +18,70 @@
 
 	<title>ApiGen generator</title>
 
-	<link rel="stylesheet" href="{$basePath}/css/bootstrap.css" type="text/css">
+	<!-- Le styles -->
+	<link href="{$basePath}/css/bootstrap.css" rel="stylesheet">
+	<link href="{$basePath}/css/bootstrap-responsive.css" rel="stylesheet">
+
+	<!-- Le fav and touch icons -->
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico" type="image/x-icon">
 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/bootstrap.js"></script>
 	<script type="text/javascript" src="{$basePath}/js/netteForms.js"></script>
 	<style type="text/css">
+		body { padding-top: 60px; padding-bottom: 40px; }
 		td.example { color: gray; font-size: small;}
 		li span.error { color: red; font-weight: bold; }
 		footer { color: gray; font-size: small; margin-top: 30px; }
 		.warn { color: red; }
+		.footer { border-top: 1px solid #E5E5E5; }
 		{block css}{/block}
 	</style>
 	{block head}{/block}
+	<script type="text/javascript">
+		{block javascript}{/block}
+		$('.navbar').scrollspy();
+	</script>
 </head>
 
-<body>
-	<script> document.body.className+=' js' </script>
+<body data-spy="scroll">
+	<script>document.body.className += ' js' </script>
 
-	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">ApiGen Generator</a>
+				<div class="nav-collapse">
+					<ul class="nav">
+						<li class="active"><a href="#intro">Home</a></li>
+						<li><a href="#existing">Existing repos</a></li>
+						<li><a href="#add">Add repo</a></li>
+						<li><a href="#feedback">Feedback</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	{include #content}
+	<div class="container">
+		<div id="intro" class="hero-unit">
+			<h1>Generate API documentation <sup>alpha</sup></h1>
+			<p>Cloud based service which generates API documentation for your GitHub based project using <a href="http://apigen.org" rel="ext">ApiGen</a>.</p>
+		</div>
 
-	<footer>
-		<a href="https://github.com/juzna/apigen-generator">GitHub</a> |
-		&copy; 2012 <a href="http://juzna.cz">juzna.cz</a> - juzna (at) gmail.com
-	</footer>
+		<div n:foreach="$flashes as $flash" class="alert {$flash->type}">{$flash->message}</div>
+
+		{include #content}
+
+		<footer class="footer">
+			<a href="https://github.com/juzna/apigen-generator">GitHub</a> |
+			&copy; 2012 <a href="http://juzna.cz">juzna.cz</a> - juzna (at) gmail.com
+		</footer>
+	</div>
 </body>
 </html>

@@ -30,7 +30,7 @@ class HomepagePresenter extends BasePresenter {
 		$frm->addProtection();
 		$frm->addText('name', 'Name of the project')->setRequired();
 		$frm->addText('url', 'GitHub URL')->setRequired();
-		$frm->addText('subdir', 'Subdirectory with PHP code');
+		$frm->addText('subdir', 'PHP code subdirectory');
 
 		$frm->addSubmit('add', 'Generate API');
 
