@@ -53,7 +53,7 @@ class Generator extends \Nette\Object {
 
 		// Generate API
 		$timeStarted = microtime(true);
-		$rootDir = APP_DIR . '/../';
+		$rootDir = realpath(APP_DIR . '/../');
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
 		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
