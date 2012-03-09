@@ -9,6 +9,10 @@
 
 
 <h2 n:if="!$repo->inProgress" style="color: red;">Finished</h2>
+<div class="alert alert-success" n:if="$repo->lastGenerated">
+	See your newly generated API doc for <a href="{$basePath}/doc/{$repo->dir}">{$repo->name}</a>.
+</div>
+
 <script type="text/javascript">
 	var finished = {= !$repo->inProgress};
 	setTimeout(function() {
