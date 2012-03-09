@@ -107,12 +107,17 @@ class Generator extends \Nette\Object {
 		echo "$cmd\n";
 		exec($cmd, $output, $retval);
 
+		$data = implode("\n", $output);
+		$data = preg_replace('~^.*\x08~m', '', $data);
+		$data = str_replace(realpath(APP_DIR . '/..'), '...', $data); // remove local paths from output
+
+
 		// Store results
 		$result = $this->db->table('result')->insert(array(
 			'repo_id' => $this->itemId,
 			'cmd'     => $cmd,
 			'ok'      => $retval == 0,
-			'output'  => $data = str_replace(realpath(APP_DIR . '/..'), '...', implode("\n", $output)), // remove local paths from output,
+			'output'  => $data, // remove local paths from output,
 		));
 
 		return $retval == 0;
