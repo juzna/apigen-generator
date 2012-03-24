@@ -13,16 +13,17 @@
 	</div>
 
 	{if $repos}
+	<script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
 	<script>
 	function filterRepos(text) {
 		$("#repos tbody tr").each(function () {
 			var tr = $(this);
-	
+
 			if (text === '') {
 				tr.show();
 				return;
 			}
-	
+
 			if (tr.find('td:eq(0), td:eq(1)').text().toLowerCase().indexOf(text.toLowerCase()) !== -1) {
 				tr.show();
 			} else {
@@ -30,6 +31,17 @@
 			}
 		});
 	}
+	$(function() {
+		$('#repos').tablesorter({
+			headers: {
+				4: { sorter: false },
+				5: { sorter: false },
+			},
+			textExtraction: function(el) {
+				return $(el).data('sorter') || el.textContent;
+			}
+		});
+	});
 	</script>
 	<form>
 	<p>Filter: <input type="text" id="filter" onkeyup="filterRepos(this.value)"></p>
@@ -54,8 +66,8 @@
 				<small><a n:tag-if="strpos($repo->url, 'github.com') !== false" href="https://github.com/{$repo->dir}">{$repo->dir}</a>
 				<a n:if="$repo->branch" class="label label-info" title="Branch" href="https://github.com/{$repo->dir}/tree/{$repo->branch}">{$repo->branch}</a>
 			</td>
-			<td>{!$repo->lastPull|timeAgoInWordsEx}</td>
-			<td>{!$repo->lastGenerated|timeAgoInWordsEx}</td>
+			<td data-sorter="-{$repo->lastPull|date:'U'}">{!$repo->lastPull|timeAgoInWordsEx}</td>
+			<td data-sorter="-{$repo->lastGenerated|date:'U'}">{!$repo->lastGenerated|timeAgoInWordsEx}</td>
 			<td n:class="status, $repo->error ? error">
 				{if !$repo->error && !$repo->lastGenerated}
 					being generated right now...
