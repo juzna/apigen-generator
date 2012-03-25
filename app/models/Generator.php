@@ -57,7 +57,7 @@ class Generator extends \Nette\Object {
 		$sourceDir = "$repoDir/$item->subdir";
 		$docDir = DOC_PROCESSING_DIR . "/$item->dir";
 		$docFinalDir = DOC_FINAL_DIR . "/$item->dir";
-		$cmd = "php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=yes --title=" . escapeshellarg($item->name);
+		$cmd = "php -dmemory_limit=1024M $rootDir/apigen/apigen.php -s " . escapeshellarg($sourceDir) . " -d " . escapeshellarg($docDir) . " --charset=auto --download --debug --colors=no --progressbar=yes --title=" . escapeshellarg($item->name) . ' --google-analytics=UA-10607448-4 --google-cse-id=003517389015876838664:fhzsqxwsggg';
 		$cmd = "$cmd > /tmp/apigen-generating-$item->id.log 2>&1; cat /tmp/apigen-generating-$item->id.log";
 		$generatedWell = $this->exec($cmd, $result);
 		$this->db->table('repo')->where('id', $item->id)->update(array(
