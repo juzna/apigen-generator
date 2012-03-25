@@ -13,16 +13,17 @@
 	</div>
 
 	{if $repos}
+	<script src="{$basePath}/js/jquery.tablesorter.min.js"></script>
 	<script>
 	function filterRepos(text) {
 		$("#repos tbody tr").each(function () {
 			var tr = $(this);
-	
+
 			if (text === '') {
 				tr.show();
 				return;
 			}
-	
+
 			if (tr.find('td:eq(0), td:eq(1)').text().toLowerCase().indexOf(text.toLowerCase()) !== -1) {
 				tr.show();
 			} else {
@@ -30,6 +31,14 @@
 			}
 		});
 	}
+	$(document).ready(function() {
+		$('#repos').tablesorter({
+			sortList: [[0,0],[3,0]],
+			textExtraction: function(el) {
+				return $(el).attr('data-sorter');
+			}
+		});
+	});
 	</script>
 	<form>
 	<p>Filter: <input type="text" id="filter" onkeyup="filterRepos(this.value)"></p>
@@ -49,13 +58,13 @@
 		<tbody>
 		<tr n:foreach="$repos as $repo">
 			{* <td n:class="notImportant">{$repo->id}</td> *}
-			<td><a n:tag-if="$repo->lastGenerated" href="{$basePath}/doc/{$repo->dir}">{$repo->name}</a></td>
+			<td data-sorter="{$repo->id}"><a n:tag-if="$repo->lastGenerated" href="{$basePath}/doc/{$repo->dir}">{$repo->name}</a></td>
 			<td>
 				<small><a n:tag-if="strpos($repo->url, 'github.com') !== false" href="https://github.com/{$repo->dir}">{$repo->dir}</a>
 				<a n:if="$repo->branch" class="label label-info" title="Branch" href="https://github.com/{$repo->dir}/tree/{$repo->branch}">{$repo->branch}</a>
 			</td>
 			<td>{!$repo->lastPull|timeAgoInWordsEx}</td>
-			<td>{!$repo->lastGenerated|timeAgoInWordsEx}</td>
+			<td data-sorter="{$repo->lastGenerated|date:'c'}">{!$repo->lastGenerated|timeAgoInWordsEx}</td>
 			<td n:class="status, $repo->error ? error">
 				{if !$repo->error && !$repo->lastGenerated}
 					being generated right now...
