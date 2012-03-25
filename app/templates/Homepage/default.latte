@@ -69,7 +69,7 @@
 			<td data-sorter="-{$repo->lastPull|date:'U'}">{!$repo->lastPull|timeAgoInWordsEx}</td>
 			<td data-sorter="-{$repo->lastGenerated|date:'U'}">{!$repo->lastGenerated|timeAgoInWordsEx}</td>
 			<td n:class="status, $repo->error ? error">
-				{if !$repo->error && !$repo->lastGenerated}
+				{if $repo->inProgress || (!$repo->error && !$repo->lastGenerated)}
 					being generated right now...
 				{else}
 					<a n:tag-if="$repo->apigenResultId" n:href="Homepage:result $repo->id">{= !$repo->error ? 'OK' : 'failed'}</a>
