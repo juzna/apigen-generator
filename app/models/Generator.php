@@ -104,6 +104,7 @@ class Generator extends \Nette\Object {
 	 * @return bool  Finished sucessfully?
 	 */
 	private function exec($cmd, &$result = null) {
+		$timeStarted = microtime(true);
 		echo "$cmd\n";
 		exec($cmd, $output, $retval);
 
@@ -114,10 +115,12 @@ class Generator extends \Nette\Object {
 
 		// Store results
 		$result = $this->db->table('result')->insert(array(
-			'repo_id' => $this->itemId,
-			'cmd'     => $cmd,
-			'ok'      => $retval == 0,
-			'output'  => $data, // remove local paths from output,
+			'repo_id'    => $this->itemId,
+			'cmd'        => $cmd,
+			'ok'         => $retval == 0,
+			'output'     => $data, // remove local paths from output,
+			'executedAt' => new \Nette\Database\SqlLiteral('NOW()'),
+			'duration'   => microtime(true) - $timeStarted,
 		));
 
 		return $retval == 0;

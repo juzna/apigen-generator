@@ -34,6 +34,8 @@ CREATE TABLE `result` (
   `cmd` varchar(255) NOT NULL,
   `ok` tinyint(1) NOT NULL,
   `output` text NOT NULL,
+  `executedAt` datetime default NULL,
+  `duration` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
