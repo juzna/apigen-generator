@@ -29,14 +29,19 @@ class Generator extends \Nette\Object {
 		$repoDir = REPOS_DIR . '/' . $item->dir; $repoDirE = escapeshellarg($repoDir);
 		$gitDir = "$repoDir/.git";
 
+		$url = $this->fixUrl($item->url);
+
 		// Clone repo
 		if(!file_exists($gitDir)) {
 			$cloned = true;
-			echo "Cloning '$item->url' to '$repoDir'\n";
-			$this->git("clone '$item->url' $repoDirE");
+			echo "Cloning '$url' to '$repoDir'\n";
+			$this->git("clone '$url' $repoDirE");
 			$this->git("--git-dir='$gitDir' submodule init");
 			$this->git("--git-dir='$gitDir' submodule update");
-		} else $cloned = false;
+		} else {
+			$this->git("--git-dir='$gitDir' remote set-url origin '$url'"); // fix the URL if it was wrong
+			$cloned = false;
+		}
 
 		// Pull
 		$headBefore = $this->getHead($gitDir);
@@ -125,4 +130,21 @@ class Generator extends \Nette\Object {
 
 		return $retval == 0;
 	}
+
+
+
+	/**
+	 * Fix URL of the repo if necessary
+	 * @param string $url
+	 * @return string
+	 */
+	private function fixUrl($url)
+	{
+		if (preg_match('#https?://github.com/([^/]+)/([^/]+)(.git)?#', $url, $match)) { // https - it sometimes asks for password :(
+			return "git://github.com/$match[1]/$match[2].git";
+		}
+
+		return $url;
+	}
+
 }
