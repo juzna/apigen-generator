@@ -25,7 +25,7 @@ class GeneratorPresenter extends BasePresenter {
 	// generate API for all repos
 	public function actionGenerateAll() {
 		$this->beginRawOutput();
-		foreach($this->db->query("select * from repo where lastPull is null or lastPull < date_sub(now(), interval 1 hour)") as $repo) {
+		foreach($this->db->query("select * from repo where enabled = 1 and lastPull is null or lastPull < date_sub(now(), interval 1 hour)") as $repo) {
 			echo "Processing repo $repo->url ($repo->id)\n";
 			$this->make($repo);
 			echo '<hr>';
@@ -37,7 +37,7 @@ class GeneratorPresenter extends BasePresenter {
 	// regenerate all
 	public function actionRegenerateAll() {
 		$this->beginRawOutput();
-		foreach($this->db->query("select * from repo") as $repo) {
+		foreach($this->db->query("select * from repo where enabled = 1") as $repo) {
 			echo "Processing repo $repo->url ($repo->id)\n";
 			$this->make($repo);
 			echo '<hr>';
