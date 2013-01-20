@@ -22,12 +22,20 @@ class HookPresenter extends BasePresenter
 		if ($url) {
 			$repo = $this->db->table('repo')->where('url', $url)->limit(1)->fetch();
 
-		} else { // github hook
-			$push = \Nette\Utils\Json::decode($this->getHttpRequest()->getPost('payload'), \Nette\Utils\Json::FORCE_ARRAY);
+		} elseif ($this->request->isPost()) { // github hook
+			$payload = $this->getHttpRequest()->getPost('payload');
+			if ( ! $payload) {
+				throw new \Nette\Application\BadRequestException("Expected payload", 404);
+			}
+			$push = \Nette\Utils\Json::decode($payload, \Nette\Utils\Json::FORCE_ARRAY);
 			$url = $push['repository']['url'];
 			$urls = $this->getOtherURLs($url);
 
 			$repo = $this->db->table('repo')->where('url', $urls)->limit(1)->fetch();
+
+		} else { // show help and do nothing
+			$this->setView('help');
+			return;
 		}
 
 		if ( ! $repo) throw new \Nette\Application\BadRequestException("Repository not found", 404);
