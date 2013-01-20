@@ -23,6 +23,13 @@ class Generator extends \Nette\Object {
 	 * @param bool $force
 	 */
 	public function make($item, $force) {
+		// simple locking
+		if ($this->db->query("select inProgress from repo where id=$item->id")->fetchColumn() == 1) {
+			$this->db->query("update repo set stalled = stalled + 1 where id=$item->id");
+			echo "Already being processed, skipping\n";
+			return;
+		}
+
 		$pwd = getcwd(); // current working directory
 		$this->itemId = $item->id;
 		$this->db->query("update repo set inProgress=1 where id=$item->id");
@@ -67,6 +74,7 @@ class Generator extends \Nette\Object {
 		$generatedWell = $this->exec($cmd, $result);
 		$this->db->table('repo')->where('id', $item->id)->update(array(
 			'inProgress'     => 0,
+			'stalled'        => 0,
 			'apigenResultId' => $result->id,
 			'apigenTime'     => microtime(true) - $timeStarted,
 			'sizeDoc'        => (int) exec("du -sb " . escapeshellarg($docDir)),

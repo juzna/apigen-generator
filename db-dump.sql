@@ -22,6 +22,7 @@ CREATE TABLE `repo` (
   `sizeDoc` int(11) DEFAULT NULL,
   `inProgress` tinyint(1) DEFAULT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `stalled` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `dir` (`dir`),
   UNIQUE KEY `url` (`url`)
