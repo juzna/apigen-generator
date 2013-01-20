@@ -12,7 +12,7 @@ class GeneratorPresenter extends BasePresenter {
 		parent::startup();
 
 		// User must be authenticated
-		if (PHP_SAPI !== 'cli' && !$this->getUser()->loggedIn) {
+		if ( ! $this->isAllowed()) {
 			$this->redirect('Sign:in');
 		}
 	}
@@ -78,4 +78,20 @@ class GeneratorPresenter extends BasePresenter {
 	protected function make($item) {
 		$this->context->generator->make($item, (bool) $this->getParameter('force'));
 	}
+
+
+
+	/**
+	 * Check whether the user is authenticated/allowed to access generator
+	 */
+	private function isAllowed()
+	{
+		if (PHP_SAPI === 'cli') return TRUE; // cron scripts
+		if ($this->getUser()->loggedIn) return TRUE; // only I can log in ;)
+
+		// TODO: allow more people, maybe
+
+		return FALSE;
+	}
+
 }
