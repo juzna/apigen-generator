@@ -95,7 +95,7 @@ class Generator extends \Nette\Object {
 	 * @return string
 	 */
 	private function getHead($gitDir) {
-		return trim(file_get_contents("$gitDir/refs/heads/master"));
+		return trim(@file_get_contents("$gitDir/refs/heads/master")); // @ - file may not exist?
 	}
 
 	private function git($cmd) {
