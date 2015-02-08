@@ -5,7 +5,7 @@
  *
  * @author Jan Dolecek <juzna.cz@gmail.com>
  */
-class Generator extends \Nette\Object {
+class ApigenGenerator extends \Nette\Object {
 	/** @var \Nette\Database\Connection */
 	private $db;
 
